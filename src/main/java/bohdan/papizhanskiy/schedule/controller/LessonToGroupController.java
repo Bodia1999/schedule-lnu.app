@@ -1,19 +1,16 @@
 package bohdan.papizhanskiy.schedule.controller;
 
-import bohdan.papizhanskiy.schedule.dto.request.LessonRequest;
 import bohdan.papizhanskiy.schedule.dto.request.LessonToGroupRequest;
-import bohdan.papizhanskiy.schedule.dto.response.LessonResponse;
 import bohdan.papizhanskiy.schedule.dto.response.LessonToGroupResponse;
-import bohdan.papizhanskiy.schedule.entity.Lesson;
 import bohdan.papizhanskiy.schedule.entity.LessonToGroup;
 import bohdan.papizhanskiy.schedule.exception.WrongInputException;
-import bohdan.papizhanskiy.schedule.service.LessonService;
 import bohdan.papizhanskiy.schedule.service.LessonToGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/lessonToGroup")
 public class LessonToGroupController {
