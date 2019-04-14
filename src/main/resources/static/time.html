@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Time-Admin</title>
+    <link rel="stylesheet" href="css/time.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    </head>
+<body>
+<div>
+ <!--<header>-->
+   <!--<div class="logo">-->
+    <!--<a href="main.html"><img class="logotype" src="photo/FINAL_VERSION.png" alt="logo"></a>-->
+
+   <!--</div>-->
+ <!--</header>-->
+  
+</div>
+<div class="createGraphicCardButton">
+  
+<button id="openModal">Create lesson time</button>
+</div>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="close">&times;</span>
+            <h2>Create lesson time</h2>
+        </div>
+        <div class="modal-body">
+            <div>
+                <form>
+                    <label for="startTime">Start time</label><br>
+                    <input type="text" id="startTime" name="name" placeholder="Write like(10:10).."><br>
+                    <label for="endTime">End time</label><br>
+                    <input type="text" id="endTime" name="endTime" placeholder="Write like(11:30).."><br>
+                    <label for="dayOfTheWeek">Day of the week</label><br>
+                    <input type="text" id="dayOfTheWeek" name="dayOfTheWeek" placeholder="Write day of the week.."><br>
+                    <!--<label for="volumeOfMemory">Volume of memory</label><br>-->
+                    <!--<input min="0" type="number" id="volumeOfMemory" name="volumeOfMemory" placeholder="Your volume Of Memory.."><br>-->
+                    <!--<label for="typeOfMemory">Type of memory</label><br>-->
+                    <!--<input type="text" id="typeOfMemory" name="typeOfMemory" placeholder="Your type Of Memory.."><br>-->
+                    <input type="button" id="btnCreateTimes" value="Create">
+                    <input type="button" id="btnUpdateTimes" value="Update">
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <h3>Form for new time</h3>
+        </div>
+    </div>
+
+</div>
+    
+
+
+
+<table id="times">
+    <tr>
+        <th>ID</th>
+        <th>Start time</th>
+        <th>End time</th>
+        <th>Day of the week</th>
+        <!--<th>Volume Of Memory</th>-->
+        <!--<th>Type Of Memory</th>-->
+        <th>Delete Button</th>
+        <th>Update Button</th>
+    </tr>
+</table>
+
+<script>
+    var mainUrl = "http://localhost:8000";
+window.onload = function(){
+    setModalConfiguration();
+    getAllTimes();
+    setActionOnCreateBtn();
+    $('#btnCreateTimes').show();
+    $('#btnUpdateTimes').hide();
+}
+    //start when load page PS reload page for triggered http request
+    function getAllTimes() {
+        $.ajax({
+            url: mainUrl + "/time",
+            type: "GET",
+            // headers:{
+            //     'Authorize':window.localStorage.getItem('token')
+            // },
+
+
+            contentType: "application/json",
+            success: function (dataResponse) {
+                setTimesToTable(dataResponse);
+                setActionOnDeleteButtons();
+                setActionOnUpdateButton();
+            },
+            error: function (error) {
+                alert(error.message);
+            }
+        });
+    }
+
+    function setTimesToTable(time) {
+        for (var i = 0; i < time.length; i++) {
+            setTimeToTable(time[i]);
+        }
+    }
+
+    function setTimeToTable(time) {
+        var tableOfGraphicCards = $("#times");
+        tableOfGraphicCards.append('<tr>' +
+            '<td>' + time.id + '</td>' +
+            '<td>' + time.startTime + '</td>' +
+            '<td>' + time.endTime + '</td>' +
+            '<td>' + time.dayOfWeek + '</td>' +
+            // '<td>' + time.volumeOfMemory + '</td>' +
+            // '<td>' + time.typeOfMemory + '</td>' +
+            '<td><button class="button" value="' + time.id + '">Delete</button></td>' +
+            '<td><button class="buttonToUpdate" value="' + time.id +'">Update</button></td>' +
+            '</tr>');
+    }
+
+
+    function setActionOnCreateBtn() {
+        $("#btnCreateTimes").click(function () {
+
+            var startTime = $("#startTime").val();
+            var endTime = $("#endTime").val();
+            var dayOfTheWeek = $("#dayOfTheWeek").val();
+            // var volumeOfMemory = $("#volumeOfMemory").val();
+            // var typeOfMemory = $("#typeOfMemory").val();
+//            if (firstName != null && lastName != null && age != null) {
+
+            var newTime = {
+                "startTime": startTime,
+                "endTime":endTime,
+                "dayOfWeek":dayOfTheWeek
+                // "volumeOfMemory":volumeOfMemory,
+                // "typeOfMemory":typeOfMemory
+            };
+
+            $.ajax({
+                url: mainUrl + "/time",
+                type: "POST",
+                // headers:{
+                //     'Authorize':window.localStorage.getItem('token')
+                // },
+                contentType: "application/json",
+                data: JSON.stringify(newTime),
+                success: function (data) {
+                    location.reload();
+                },
+                error: function (error) {
+                    alert(error.message);
+                }
+            });
+//            } else {
+//                alert("Всі поля повинні бути заповнені")
+//            }
+        });
+    }
+
+    //delete process
+    function setActionOnDeleteButtons() {
+        $(".button").each(function (index) {
+            $(this).click(function () {
+                $.ajax({
+                    url: mainUrl + "/time?id=" + $(this).val(),
+                    type: "DELETE",
+                    // headers:{
+                    //     'Authorize':window.localStorage.getItem('token')
+                    // },
+                    success: function (data) {
+                        location.reload();
+                    },
+                    error: function (error) {
+                        alert(error.message);
+                    }
+                });
+
+            })
+        })
+
+    }
+
+    function setActionOnUpdateButton() {
+
+        $(".buttonToUpdate").each(function (index) {
+            var identifier;
+            identifier = $(this).val();
+            $(this).click(function () {
+                $.ajax({
+                    url: mainUrl + "/time/findOne?id=" + $(this).val(),
+                    type: "POST",
+                    // headers:{
+                    //     'Authorize':window.localStorage.getItem('token')
+                    // },
+                    contentType: "application/json",
+                    success: function (dataResponse) {
+                        // var parse = JSON.parse(dataResponse);
+                        //
+                        $("#startTime").val(dataResponse.startTime);
+                        $("#endTime").val(dataResponse.endTime);
+                        $("#dayOfTheWeek").val(dataResponse.dayOfWeek);
+                        $('#btnCreateTimes').hide();
+                        $('#btnUpdateTimes').show();
+
+                        var elementById = document.getElementById("myModal");
+                        elementById.style.display="block";
+                        $("#btnUpdateTimes").click(function () {
+
+                            var startTime = $("#startTime").val();
+                            var endTime = $("#endTime").val();
+                            var dayOfTheWeek = $("#dayOfTheWeek").val();
+                            // var volumeOfMemory = $("#volumeOfMemory").val();
+                            // var typeOfMemory = $("#typeOfMemory").val();
+//            if (firstName != null && lastName != null && age != null) {
+
+                            var newTime = {
+                                "startTime": startTime,
+                                "endTime":endTime,
+                                "dayOfWeek":dayOfTheWeek
+                                // "volumeOfMemory":volumeOfMemory,
+                                // "typeOfMemory":typeOfMemory
+                            };
+
+                            $.ajax({
+                                url: mainUrl + "/time?id="+ identifier,
+                                type: "PUT",
+                                // headers:{
+                                //     'Authorize':window.localStorage.getItem('token')
+                                // },
+                                contentType: "application/json",
+                                data: JSON.stringify(newTime),
+                                success: function (data) {
+                                    location.reload();
+                                },
+                                error: function (error) {
+                                    alert("Something went wrong");
+                                }
+                            });
+//            } else {
+//                alert("Всі поля повинні бути заповнені")
+//            }
+                        });
+                    }
+                });
+            })
+        });
+
+    }
+
+
+
+
+
+
+
+
+
+    function setModalConfiguration() {
+        // Get the modal
+        var modal = document.getElementById('myModal');
+
+
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("openModal");
+
+
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal
+
+
+
+        btn.onclick = function(){
+            modal.style.display = "block";
+        };
+
+
+        span.onclick = function () {
+            modal.style.display = "none";
+        };
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+
+            }
+        };
+    }
+</script>
+
+<!--<script src="script/graphicCard.js" ></script>-->
+<!--<script src="script/graphic.js"></script>-->
+</body>
+</html>

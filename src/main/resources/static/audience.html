@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Audience-Admin</title>
+    <link rel="stylesheet" href="css/audience.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    </head>
+<body>
+<div>
+ <!--<header>-->
+   <!--<div class="logo">-->
+    <!--<a href="main.html"><img class="logotype" src="photo/FINAL_VERSION.png" alt="logo"></a>-->
+
+   <!--</div>-->
+ <!--</header>-->
+  
+</div>
+<div class="createGraphicCardButton">
+  
+<button id="openModal">Create audience</button>
+</div>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="close">&times;</span>
+            <h2>Create audience</h2>
+        </div>
+        <div class="modal-body">
+            <div>
+                <form>
+                    <label for="audienceNumber">Audience number</label><br>
+                    <input type="text" id="audienceNumber" name="audienceNumber" placeholder="Audience number.."><br>
+                    <label for="audienceAddress">Audience address</label><br>
+                    <input type="text" id="audienceAddress" name="address" placeholder="Audience address.."><br>
+                    <!--<label for="dayOfTheWeek">Day of the week</label><br>-->
+                    <!--<input type="text" id="dayOfTheWeek" name="dayOfTheWeek" placeholder="Write day of the week.."><br>-->
+                    <!--<label for="volumeOfMemory">Volume of memory</label><br>-->
+                    <!--<input min="0" type="number" id="volumeOfMemory" name="volumeOfMemory" placeholder="Your volume Of Memory.."><br>-->
+                    <!--<label for="typeOfMemory">Type of memory</label><br>-->
+                    <!--<input type="text" id="typeOfMemory" name="typeOfMemory" placeholder="Your type Of Memory.."><br>-->
+                    <input type="button" id="btnCreateAudience" value="Create">
+                    <input type="button" id="btnUpdateAudience" value="Update">
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <h3>Form for new audience</h3>
+        </div>
+    </div>
+
+</div>
+    
+
+
+
+<table id="audience">
+    <tr>
+        <th>ID</th>
+        <th>Audience number</th>
+        <th>Audience address</th>
+        <!--<th>Day of the week</th>-->
+        <!--<th>Volume Of Memory</th>-->
+        <!--<th>Type Of Memory</th>-->
+        <th>Delete Button</th>
+        <th>Update Button</th>
+    </tr>
+</table>
+
+<script>
+    var mainUrl = "http://localhost:8000";
+window.onload = function(){
+    setModalConfiguration();
+    getAllAudiences();
+    setActionOnCreateBtn();
+    $('#btnCreateAudience').show();
+    $('#btnUpdateAudience').hide();
+}
+    //start when load page PS reload page for triggered http request
+    function getAllAudiences() {
+        $.ajax({
+            url: mainUrl + "/audience",
+            type: "GET",
+            // headers:{
+            //     'Authorize':window.localStorage.getItem('token')
+            // },
+
+
+            contentType: "application/json",
+            success: function (dataResponse) {
+                setAudiencesToTable(dataResponse);
+                setActionOnDeleteButtons();
+                setActionOnUpdateButton();
+            },
+            error: function (error) {
+                alert(error.message);
+            }
+        });
+    }
+
+    function setAudiencesToTable(audience) {
+        for (var i = 0; i < audience.length; i++) {
+            setAudienceToTable(audience[i]);
+        }
+    }
+
+    function setAudienceToTable(audience) {
+        var tableOfAudiences = $("#audience");
+        tableOfAudiences.append('<tr>' +
+            '<td>' + audience.id + '</td>' +
+            '<td>' + audience.audienceNumber+ '</td>' +
+            '<td>' + audience.audienceAddress + '</td>' +
+            // '<td>' + audience.dayOfWeek + '</td>' +
+            // '<td>' + time.volumeOfMemory + '</td>' +
+            // '<td>' + time.typeOfMemory + '</td>' +
+            '<td><button class="button" value="' + audience.id + '">Delete</button></td>' +
+            '<td><button class="buttonToUpdate" value="' + audience.id +'">Update</button></td>' +
+            '</tr>');
+    }
+
+
+    function setActionOnCreateBtn() {
+        $("#btnCreateAudience").click(function () {
+
+            var number = $("#audienceNumber").val();
+            var address = $("#audienceAddress").val();
+            // var dayOfTheWeek = $("#dayOfTheWeek").val();
+            // var volumeOfMemory = $("#volumeOfMemory").val();
+            // var typeOfMemory = $("#typeOfMemory").val();
+//            if (firstName != null && lastName != null && age != null) {
+
+            var newAudience = {
+                "audienceNumber": number,
+                "audienceAddress":address
+                // "dayOfWeek":dayOfTheWeek
+                // "volumeOfMemory":volumeOfMemory,
+                // "typeOfMemory":typeOfMemory
+            };
+
+            $.ajax({
+                url: mainUrl + "/audience",
+                type: "POST",
+                // headers:{
+                //     'Authorize':window.localStorage.getItem('token')
+                // },
+                contentType: "application/json",
+                data: JSON.stringify(newAudience),
+                success: function () {
+                    location.reload();
+                },
+                error: function (error) {
+                    alert(error.message);
+                }
+            });
+//            } else {
+//                alert("Всі поля повинні бути заповнені")
+//            }
+        });
+    }
+
+    //delete process
+    function setActionOnDeleteButtons() {
+        $(".button").each(function (index) {
+            $(this).click(function () {
+                $.ajax({
+                    url: mainUrl + "/audience?id=" + $(this).val(),
+                    type: "DELETE",
+                    // headers:{
+                    //     'Authorize':window.localStorage.getItem('token')
+                    // },
+                    success: function (data) {
+                        location.reload();
+                    },
+                    error: function (error) {
+                        alert(error.message);
+                    }
+                });
+
+            })
+        })
+
+    }
+
+    function setActionOnUpdateButton() {
+
+        $(".buttonToUpdate").each(function (index) {
+            var identifier;
+            identifier = $(this).val();
+            $(this).click(function () {
+                $.ajax({
+                    url: mainUrl + "/audience/findOne?id=" + $(this).val(),
+                    type: "POST",
+                    // headers:{
+                    //     'Authorize':window.localStorage.getItem('token')
+                    // },
+                    contentType: "application/json",
+                    success: function (dataResponse) {
+                        // var parse = JSON.parse(dataResponse);
+                        //
+                        $("#audienceNumber").val(dataResponse.audienceNumber);
+                        $("#audienceAddress").val(dataResponse.audienceAddress);
+                        // $("#dayOfTheWeek").val(dataResponse.dayOfWeek);
+                        $('#btnCreateAudience').hide();
+                        $('#btnUpdateAudience').show();
+
+                        var elementById = document.getElementById("myModal");
+                        elementById.style.display="block";
+                        $("#btnUpdateAudience").click(function () {
+
+                            var number = $("#audienceNumber").val();
+                            var address = $("#audienceAddress").val();
+                            // var dayOfTheWeek = $("#dayOfTheWeek").val();
+                            // var volumeOfMemory = $("#volumeOfMemory").val();
+                            // var typeOfMemory = $("#typeOfMemory").val();
+//            if (firstName != null && lastName != null && age != null) {
+
+                            var newAudience = {
+                                "audienceNumber": number,
+                                "audienceAddress":address
+                                // "dayOfWeek":dayOfTheWeek
+                                // "volumeOfMemory":volumeOfMemory,
+                                // "typeOfMemory":typeOfMemory
+                            };
+
+                            $.ajax({
+                                url: mainUrl + "/audience?id="+ identifier,
+                                type: "PUT",
+                                // headers:{
+                                //     'Authorize':window.localStorage.getItem('token')
+                                // },
+                                contentType: "application/json",
+                                data: JSON.stringify(newAudience),
+                                success: function (data) {
+                                    location.reload();
+                                },
+                                error: function (error) {
+                                    alert("Something went wrong");
+                                }
+                            });
+//            } else {
+//                alert("Всі поля повинні бути заповнені")
+//            }
+                        });
+                    }
+                });
+            })
+        });
+
+    }
+
+
+
+
+
+
+
+
+
+    function setModalConfiguration() {
+        // Get the modal
+        var modal = document.getElementById('myModal');
+
+
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("openModal");
+
+
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal
+
+
+
+        btn.onclick = function(){
+            modal.style.display = "block";
+        };
+
+
+        span.onclick = function () {
+            modal.style.display = "none";
+        };
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+
+            }
+        };
+    }
+</script>
+
+<!--<script src="script/graphicCard.js" ></script>-->
+<!--<script src="script/graphic.js"></script>-->
+</body>
+</html>

@@ -17,17 +17,17 @@ public class TimeController {
     private TimeService timeService;
 
     @GetMapping
-    public List<TimeResponse> findAll(){
+    public List<TimeResponse> findAll() {
         return timeService.findAll();
     }
 
     @DeleteMapping
-    public void delete(@RequestParam Long id ) throws WrongInputException {
+    public void delete(@RequestParam Long id) throws WrongInputException {
         timeService.delete(id);
     }
 
     @PutMapping
-    public TimeResponse update (@RequestParam Long id , @RequestBody TimeRequest timeRequest) throws WrongInputException {
+    public TimeResponse update(@RequestParam Long id, @RequestBody TimeRequest timeRequest) throws WrongInputException {
         return timeService.update(id, timeRequest);
     }
 

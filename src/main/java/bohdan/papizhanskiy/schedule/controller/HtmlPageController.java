@@ -1,0 +1,18 @@
+package bohdan.papizhanskiy.schedule.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class HtmlPageController {
+
+    @RequestMapping("/timeAdmin")
+    public String adminTime(){
+        return "time.html";
+    }
+
+    @RequestMapping("/audienceAdmin")
+    public String adminAudience(){
+        return "audience.html";
+    }
+}
