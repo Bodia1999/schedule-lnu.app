@@ -32,13 +32,17 @@
         </div>
         <div class="modal-body">
             <div>
-                <form>
-                    <label for="name">Start time</label><br>
+                <form style="height: 500px;">
+                    <label for="name">Lesson name</label><br>
                     <input type="text" id="name" name="name" placeholder="Write your name of lesson.."><br>
-                    <label for="endTime">End time</label><br>
-                    <input type="text" id="endTime" name="endTime" placeholder="Write like(11:30).."><br>
-                    <label for="dayOfTheWeek">Day of the week</label><br>
-                    <input type="text" id="dayOfTheWeek" name="dayOfTheWeek" placeholder="Write day of the week.."><br>
+                    <label for="time">Time</label><br>
+                    <select id="time">
+                    </select><br><br><br>
+                    <label for="teacher">Teacher</label><br>
+                    <select id="teacher"></select><br><br><br>
+                    <label for="audience">Audience</label><br>
+                    <select id="audience"></select><br><br><br><br>
+<!--                    <input type="text" id="dayOfTheWeek" name="dayOfTheWeek" placeholder="Write day of the week.."><br>-->
                     <!--<label for="volumeOfMemory">Volume of memory</label><br>-->
                     <!--<input min="0" type="number" id="volumeOfMemory" name="volumeOfMemory" placeholder="Your volume Of Memory.."><br>-->
                     <!--<label for="typeOfMemory">Type of memory</label><br>-->
@@ -74,13 +78,13 @@
 
 <script>
     var mainUrl = "http://localhost:8000";
-window.onload = function(){
+
     setModalConfiguration();
     getAllLesson();
     setActionOnCreateBtn();
     $('#btnCreateTimes').show();
     $('#btnUpdateTimes').hide();
-}
+
     //start when load page PS reload page for triggered http request
     function getAllLesson() {
         $.ajax({
@@ -260,7 +264,80 @@ window.onload = function(){
     }
 
 
+function getTime(){
 
+    $.ajax({
+        url: mainUrl + "/time",
+        type: "GET",
+        // headers:{
+        //     'Authorize':window.localStorage.getItem('token')
+        // },
+
+
+        contentType: "application/json",
+        success: function (dataResponse) {
+            $('#time').html('');
+            for (let time of dataResponse){
+            appendTime(time)}
+            // setActionOnDeleteButtons();
+            // setActionOnUpdateButton();
+        },
+});}
+
+function appendTime(values){
+    var time = $("#time");
+    time.append(`<option value="${values.id}">${values.dayOfWeek} ${values.startTime}-${values.endTime}</option>`);
+}
+
+function appendTeacher(values){
+    var teacher = $("#teacher");
+    teacher.append(`<option value="${values.id}">${values.name} ${values.surname} ${values.patronymic}</option>`);
+}
+
+function appendAudience(values){
+    var audience = $("#audience");
+    audience.append(`<option value="${values.id}">${values.audienceNumber} ${values.audienceAddress}</option>`);
+}
+
+function getTeacher(){
+    $.ajax({
+        url: mainUrl + "/teacher",
+        type: "GET",
+        // headers:{
+        //     'Authorize':window.localStorage.getItem('token')
+        // },
+
+
+        contentType: "application/json",
+        success: function (dataResponse) {
+            $('#teacher').html('');
+            for (let teacher of dataResponse){
+                appendTeacher(teacher)}
+            // setActionOnDeleteButtons();
+            // setActionOnUpdateButton();
+        },
+    });
+}
+
+function getAudience(){
+    $.ajax({
+        url: mainUrl + "/audience",
+        type: "GET",
+        // headers:{
+        //     'Authorize':window.localStorage.getItem('token')
+        // },
+
+
+        contentType: "application/json",
+        success: function (dataResponse) {
+            $('#audience').html('');
+            for (let audience of dataResponse){
+                appendAudience(audience)}
+            // setActionOnDeleteButtons();
+            // setActionOnUpdateButton();
+        },
+    });
+}
 
 
 
@@ -286,6 +363,9 @@ window.onload = function(){
 
 
         btn.onclick = function(){
+            getTime();
+            getTeacher();
+            getAudience();
             modal.style.display = "block";
         };
 

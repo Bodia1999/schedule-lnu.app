@@ -73,13 +73,13 @@
 
 <script>
     var mainUrl = "http://localhost:8000";
-window.onload = function(){
+
     setModalConfiguration();
     getAllTimes();
     setActionOnCreateBtn();
     $('#btnCreateTimes').show();
     $('#btnUpdateTimes').hide();
-}
+
     //start when load page PS reload page for triggered http request
     function getAllTimes() {
         $.ajax({
@@ -109,7 +109,7 @@ window.onload = function(){
     }
 
     function setTimeToTable(time) {
-        var tableOfGraphicCards = $("#teachers");
+        var tableOfGraphicCards = $("#times");
         tableOfGraphicCards.append('<tr>' +
             '<td>' + time.id + '</td>' +
             '<td>' + time.startTime + '</td>' +
