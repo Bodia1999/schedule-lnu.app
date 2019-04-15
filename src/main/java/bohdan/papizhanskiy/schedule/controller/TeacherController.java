@@ -39,7 +39,7 @@ public class TeacherController {
     }
 
     @PostMapping("/findOne")
-    public Teacher findOne(@RequestParam Long id) throws WrongInputException {
-        return teacherService.findOne(id);
+    public TeacherResponse findOne(@RequestParam Long id) throws WrongInputException {
+        return new TeacherResponse(teacherService.findOne(id));
     }
 }

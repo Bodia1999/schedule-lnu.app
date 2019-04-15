@@ -39,7 +39,7 @@ public class TimeController {
     }
 
     @PostMapping("/findOne")
-    public Time findOne(@RequestParam Long id) throws WrongInputException {
-        return timeService.findOne(id);
+    public TimeResponse findOne(@RequestParam Long id) throws WrongInputException {
+        return new TimeResponse(timeService.findOne(id));
     }
 }

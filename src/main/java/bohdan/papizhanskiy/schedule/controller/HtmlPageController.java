@@ -8,11 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class HtmlPageController {
 
-    @RequestMapping("/")
-    public String main(){
-        return "swagger-ui.com";
-    }
-
     @RequestMapping("/timeAdmin")
     public String adminTime() {
         return "time.html";

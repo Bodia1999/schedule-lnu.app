@@ -52,22 +52,22 @@ div {
 */
 
 
-#audience {
+#audiences {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;
     width: 100%;
 }
 
-#audience td, #audience th {
+#audiences td, #audiences th {
     border: 1px solid #ddd;
     padding: 8px;
 }
 
-#audience tr:nth-child(even){background-color: #f2f2f2;}
+#audiences tr:nth-child(even){background-color: #f2f2f2;}
 
-#audience tr:hover {background-color: #ddd;}
+#audiences tr:hover {background-color: #ddd;}
 
-#audience th {
+#audiences th {
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;
@@ -127,7 +127,7 @@ div {
   display: flex;
   justify-content: flex-end; 
 }
-.createGraphicCardButton{
+.createAudienceButton{
   display: flex;
   justify-content: center;
 }

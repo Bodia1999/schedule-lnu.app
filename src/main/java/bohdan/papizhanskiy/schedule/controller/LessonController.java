@@ -43,8 +43,8 @@ public class LessonController {
     }
 
     @PostMapping("/findOne")
-    public Lesson findOne(@RequestParam Long id) throws WrongInputException {
-        return lessonService.findOne(id);
+    public LessonResponse findOne(@RequestParam Long id) throws WrongInputException {
+        return new LessonResponse(lessonService.findOne(id));
     }
 
     @PostMapping("/findByFilter")

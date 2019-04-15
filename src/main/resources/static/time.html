@@ -16,7 +16,7 @@
  <!--</header>-->
   
 </div>
-<div class="createGraphicCardButton">
+<div class="createTimeButton">
   
 <button id="openModal">Create lesson time</button>
 </div>
@@ -109,7 +109,7 @@ window.onload = function(){
     }
 
     function setTimeToTable(time) {
-        var tableOfGraphicCards = $("#times");
+        var tableOfGraphicCards = $("#teachers");
         tableOfGraphicCards.append('<tr>' +
             '<td>' + time.id + '</td>' +
             '<td>' + time.startTime + '</td>' +
@@ -245,6 +245,9 @@ window.onload = function(){
 //                alert("Всі поля повинні бути заповнені")
 //            }
                         });
+                    },
+                    error:function (e) {
+                        console.log(e)
                     }
                 });
             })

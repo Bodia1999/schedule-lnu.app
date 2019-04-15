@@ -52,22 +52,22 @@ div {
 */
 
 
-#times {
+#groups {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;
     width: 100%;
 }
 
-#times td, #times th {
+#groups td, #groups th {
     border: 1px solid #ddd;
     padding: 8px;
 }
 
-#times tr:nth-child(even){background-color: #f2f2f2;}
+#groups tr:nth-child(even){background-color: #f2f2f2;}
 
-#times tr:hover {background-color: #ddd;}
+#groups tr:hover {background-color: #ddd;}
 
-#times th {
+#groups th {
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;
@@ -127,7 +127,7 @@ div {
   display: flex;
   justify-content: flex-end; 
 }
-.createTimeButton{
+.createGroupButton{
   display: flex;
   justify-content: center;
 }

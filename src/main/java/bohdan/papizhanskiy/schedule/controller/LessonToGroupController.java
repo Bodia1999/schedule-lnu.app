@@ -40,7 +40,7 @@ public class LessonToGroupController {
     }
 
     @PostMapping("/findOne")
-    public LessonToGroup findOne(@RequestParam Long id) throws WrongInputException {
-        return lessonToGroupService.findOne(id);
+    public LessonToGroupResponse findOne(@RequestParam Long id) throws WrongInputException {
+        return new LessonToGroupResponse(lessonToGroupService.findOne(id));
     }
 }

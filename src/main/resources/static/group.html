@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Audience-Admin</title>
-    <link rel="stylesheet" href="css/audience.css">
+    <title>Group-Admin</title>
+    <link rel="stylesheet" href="css/group.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     </head>
 <body>
@@ -16,9 +16,9 @@
  <!--</header>-->
   
 </div>
-<div class="createAudienceButton">
+<div class="createGroupButton">
   
-<button id="openModal">Create audience</button>
+<button id="openModal">Create group</button>
 </div>
 
 <!-- The Modal -->
@@ -28,28 +28,28 @@
     <div class="modal-content">
         <div class="modal-header">
             <span class="close">&times;</span>
-            <h2>Create audience</h2>
+            <h2>Create group</h2>
         </div>
         <div class="modal-body">
             <div>
                 <form>
-                    <label for="audienceNumber">Audience number</label><br>
-                    <input type="text" id="audienceNumber" name="audienceNumber" placeholder="Audience number.."><br>
-                    <label for="audienceAddress">Audience address</label><br>
-                    <input type="text" id="audienceAddress" name="address" placeholder="Audience address.."><br>
+                    <label for="name">Name</label><br>
+                    <input type="text" id="name" name="name" placeholder="Write your name.."><br>
+<!--                    <label for="audienceAddress">Audience address</label><br>-->
+<!--                    <input type="text" id="audienceAddress" name="address" placeholder="Audience address.."><br>-->
                     <!--<label for="dayOfTheWeek">Day of the week</label><br>-->
                     <!--<input type="text" id="dayOfTheWeek" name="dayOfTheWeek" placeholder="Write day of the week.."><br>-->
                     <!--<label for="volumeOfMemory">Volume of memory</label><br>-->
                     <!--<input min="0" type="number" id="volumeOfMemory" name="volumeOfMemory" placeholder="Your volume Of Memory.."><br>-->
                     <!--<label for="typeOfMemory">Type of memory</label><br>-->
                     <!--<input type="text" id="typeOfMemory" name="typeOfMemory" placeholder="Your type Of Memory.."><br>-->
-                    <input type="button" id="btnCreateAudience" value="Create">
-                    <input type="button" id="btnUpdateAudience" value="Update">
+                    <input type="button" id="btnCreateGroup" value="Create">
+                    <input type="button" id="btnUpdateGroup" value="Update">
                 </form>
             </div>
         </div>
         <div class="modal-footer">
-            <h3>Form for new audience</h3>
+            <h3>Form for new group</h3>
         </div>
     </div>
 
@@ -58,11 +58,11 @@
 
 
 
-<table id="audiences">
+<table id="groups">
     <tr>
         <th>ID</th>
-        <th>Audience number</th>
-        <th>Audience address</th>
+        <th>Name</th>
+<!--        <th>Audience address</th>-->
         <!--<th>Day of the week</th>-->
         <!--<th>Volume Of Memory</th>-->
         <!--<th>Type Of Memory</th>-->
@@ -75,15 +75,15 @@
     var mainUrl = "http://localhost:8000";
 window.onload = function(){
     setModalConfiguration();
-    getAllAudiences();
+    getAllGroups();
     setActionOnCreateBtn();
-    $('#btnCreateAudience').show();
-    $('#btnUpdateAudience').hide();
-}
-    //start when load page PS reload page for triggered http request
-    function getAllAudiences() {
+    $('#btnCreateGroup').show();
+    $('#btnUpdateGroup').hide();
+};
+    //btnCreateGroup when load page PS reload page for triggered http request
+    function getAllGroups() {
         $.ajax({
-            url: mainUrl + "/audience",
+            url: mainUrl + "/group",
             type: "GET",
             // headers:{
             //     'Authorize':window.localStorage.getItem('token')
@@ -92,7 +92,7 @@ window.onload = function(){
 
             contentType: "application/json",
             success: function (dataResponse) {
-                setAudiencesToTable(dataResponse);
+                setGroupsToTable(dataResponse);
                 setActionOnDeleteButtons();
                 setActionOnUpdateButton();
             },
@@ -102,53 +102,42 @@ window.onload = function(){
         });
     }
 
-    function setAudiencesToTable(audience) {
-        for (var i = 0; i < audience.length; i++) {
-            setAudienceToTable(audience[i]);
+    function setGroupsToTable(group) {
+        for (var i = 0; i < group.length; i++) {
+            setAudienceToTable(group[i]);
         }
     }
 
-    function setAudienceToTable(audience) {
-        var tableOfAudiences = $("#audiences");
-        tableOfAudiences.append('<tr>' +
-            '<td>' + audience.id + '</td>' +
-            '<td>' + audience.audienceNumber+ '</td>' +
-            '<td>' + audience.audienceAddress + '</td>' +
+    function setAudienceToTable(group) {
+        var tableOfGroups = $("#groups");
+        tableOfGroups.append('<tr>' +
+            '<td>' + group.id + '</td>' +
+            '<td>' + group.name+ '</td>' +
+            // '<td>' + group.audienceAddress + '</td>' +
             // '<td>' + audience.dayOfWeek + '</td>' +
             // '<td>' + time.volumeOfMemory + '</td>' +
             // '<td>' + time.typeOfMemory + '</td>' +
-            '<td><button class="button" value="' + audience.id + '">Delete</button></td>' +
-            '<td><button class="buttonToUpdate" value="' + audience.id +'">Update</button></td>' +
+            '<td><button class="button" value="' + group.id + '">Delete</button></td>' +
+            '<td><button class="buttonToUpdate" value="' + group.id +'">Update</button></td>' +
             '</tr>');
     }
 
 
     function setActionOnCreateBtn() {
-        $("#btnCreateAudience").click(function () {
+        $("#btnCreateGroup").click(function () {
 
-            var number = $("#audienceNumber").val();
-            var address = $("#audienceAddress").val();
-            // var dayOfTheWeek = $("#dayOfTheWeek").val();
-            // var volumeOfMemory = $("#volumeOfMemory").val();
-            // var typeOfMemory = $("#typeOfMemory").val();
-//            if (firstName != null && lastName != null && age != null) {
+            var name = $("#name").val();
 
-            var newAudience = {
-                "audienceNumber": number,
-                "audienceAddress":address
-                // "dayOfWeek":dayOfTheWeek
-                // "volumeOfMemory":volumeOfMemory,
-                // "typeOfMemory":typeOfMemory
+
+            var newGroup = {
+                "name": name
             };
 
             $.ajax({
-                url: mainUrl + "/audience",
+                url: mainUrl + "/group",
                 type: "POST",
-                // headers:{
-                //     'Authorize':window.localStorage.getItem('token')
-                // },
                 contentType: "application/json",
-                data: JSON.stringify(newAudience),
+                data: JSON.stringify(newGroup),
                 success: function () {
                     location.reload();
                 },
@@ -167,7 +156,7 @@ window.onload = function(){
         $(".button").each(function (index) {
             $(this).click(function () {
                 $.ajax({
-                    url: mainUrl + "/audience?id=" + $(this).val(),
+                    url: mainUrl + "/group?id=" + $(this).val(),
                     type: "DELETE",
                     // headers:{
                     //     'Authorize':window.localStorage.getItem('token')
@@ -192,7 +181,7 @@ window.onload = function(){
             identifier = $(this).val();
             $(this).click(function () {
                 $.ajax({
-                    url: mainUrl + "/audience/findOne?id=" + $(this).val(),
+                    url: mainUrl + "/group/findOne?id=" + $(this).val(),
                     type: "POST",
                     // headers:{
                     //     'Authorize':window.localStorage.getItem('token')
@@ -201,39 +190,29 @@ window.onload = function(){
                     success: function (dataResponse) {
                         // var parse = JSON.parse(dataResponse);
                         //
-                        $("#audienceNumber").val(dataResponse.audienceNumber);
-                        $("#audienceAddress").val(dataResponse.audienceAddress);
-                        // $("#dayOfTheWeek").val(dataResponse.dayOfWeek);
-                        $('#btnCreateAudience').hide();
-                        $('#btnUpdateAudience').show();
+                        $("#name").val(dataResponse.name);
+                        $('#btnCreateGroup').hide();
+                        $('#btnUpdateGroup').show();
 
                         var elementById = document.getElementById("myModal");
                         elementById.style.display="block";
-                        $("#btnUpdateAudience").click(function () {
+                        $("#btnUpdateGroup").click(function () {
 
-                            var number = $("#audienceNumber").val();
-                            var address = $("#audienceAddress").val();
-                            // var dayOfTheWeek = $("#dayOfTheWeek").val();
-                            // var volumeOfMemory = $("#volumeOfMemory").val();
-                            // var typeOfMemory = $("#typeOfMemory").val();
-//            if (firstName != null && lastName != null && age != null) {
+                            var name = $("#name").val();
 
-                            var newAudience = {
-                                "audienceNumber": number,
-                                "audienceAddress":address
-                                // "dayOfWeek":dayOfTheWeek
-                                // "volumeOfMemory":volumeOfMemory,
-                                // "typeOfMemory":typeOfMemory
+
+                            var newGroup = {
+                                "name": name
                             };
 
                             $.ajax({
-                                url: mainUrl + "/audience?id="+ identifier,
+                                url: mainUrl + "/group?id="+ identifier,
                                 type: "PUT",
                                 // headers:{
                                 //     'Authorize':window.localStorage.getItem('token')
                                 // },
                                 contentType: "application/json",
-                                data: JSON.stringify(newAudience),
+                                data: JSON.stringify(newGroup),
                                 success: function (data) {
                                     location.reload();
                                 },
