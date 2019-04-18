@@ -32,7 +32,7 @@ public class Lesson {
     private Audience audience;
 
 
-    @OneToMany(mappedBy = "lesson")
+    @ManyToMany
     private List<LessonToGroup> lessonToGroups = new ArrayList<>();
 
    

@@ -11,5 +11,5 @@ import lombok.Setter;
 
 public class LessonToGroupRequest {
 
-    private Long lessonId;
+    private Long groupId;
 }

@@ -19,7 +19,7 @@ public class TeacherService {
 
     public Teacher findOne(Long id) throws WrongInputException {
         return teacherRepository.findById(id)
-                .orElseThrow(() -> new WrongInputException("Laptop with id " + id + " not exists"));
+                .orElseThrow(() -> new WrongInputException("Teacher with id " + id + " not exists"));
     }
 
     public List<TeacherResponse> findAll() {

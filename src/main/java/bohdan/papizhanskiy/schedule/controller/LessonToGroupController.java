@@ -43,4 +43,9 @@ public class LessonToGroupController {
     public LessonToGroupResponse findOne(@RequestParam Long id) throws WrongInputException {
         return new LessonToGroupResponse(lessonToGroupService.findOne(id));
     }
+
+    @PostMapping("/findAllByGroupId")
+    public List<LessonToGroupResponse> findAllByGroupId(@RequestParam Long id){
+        return lessonToGroupService.findAllByGroupId(id);
+    }
 }

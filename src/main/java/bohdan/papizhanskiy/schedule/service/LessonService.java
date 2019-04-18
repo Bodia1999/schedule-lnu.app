@@ -6,6 +6,7 @@ import bohdan.papizhanskiy.schedule.dto.request.PaginationRequest;
 import bohdan.papizhanskiy.schedule.dto.response.DataResponse;
 import bohdan.papizhanskiy.schedule.dto.response.LessonResponse;
 import bohdan.papizhanskiy.schedule.entity.Lesson;
+import bohdan.papizhanskiy.schedule.entity.LessonToGroup;
 import bohdan.papizhanskiy.schedule.exception.WrongInputException;
 import bohdan.papizhanskiy.schedule.repository.LessonRepository;
 import bohdan.papizhanskiy.schedule.specification.LessonSpecification;
@@ -31,6 +32,9 @@ public class LessonService {
     @Autowired
     private AudienceService audienceService;
 
+    @Autowired
+    private LessonToGroupService lessonToGroupService;
+
 
     public List<LessonResponse> findAll() {
         return lessonRepository.findAll().stream().map(LessonResponse::new).collect(Collectors.toList());
@@ -52,6 +56,11 @@ public class LessonService {
         lesson.setTeacher(teacherService.findOne(lessonRequest.getTeacherId()));
         lesson.setTime(timeService.findOne(lessonRequest.getTimeId()));
         lesson.setAudience(audienceService.findOne(lessonRequest.getAudienceId()));
+        for (Long lessonToGroup : lessonRequest.getLessonToGroupId() ){
+            LessonToGroup lessonToGroup1 = lessonToGroupService.findOne(lessonToGroup);
+            lesson.getLessonToGroups().add(lessonToGroup1);
+        }
+
 
         return lessonRepository.save(lesson);
     }
@@ -63,7 +72,7 @@ public class LessonService {
 
     public Lesson findOne(Long id) throws WrongInputException {
         return lessonRepository.findById(id)
-                .orElseThrow(() -> new WrongInputException("Laptop with id " + id + " not exists"));
+                .orElseThrow(() -> new WrongInputException("Lesson with id " + id + " not exists"));
     }
 
     public DataResponse<LessonResponse> findByFilter(LessonFilterRequest lessonFilterRequest) {

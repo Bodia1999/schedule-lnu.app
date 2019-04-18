@@ -4,7 +4,6 @@ package bohdan.papizhanskiy.schedule.service;
 import bohdan.papizhanskiy.schedule.dto.request.GroupRequest;
 import bohdan.papizhanskiy.schedule.dto.response.GroupResponse;
 import bohdan.papizhanskiy.schedule.entity.Group;
-import bohdan.papizhanskiy.schedule.entity.LessonToGroup;
 import bohdan.papizhanskiy.schedule.exception.WrongInputException;
 import bohdan.papizhanskiy.schedule.repository.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +27,10 @@ public class GroupService  {
         }
 
         group.setName(groupRequest.getName());
-        for (Long lessonToGroup : groupRequest.getLessonToGroupId() ){
-            LessonToGroup lessonToGroup1 = lessonToGroupService.findOne(lessonToGroup);
-            group.getLessonToGroup().add(lessonToGroup1);
-        }
+//        for (Long lessonToGroup : groupRequest.getLessonToGroupId() ){
+//            LessonToGroup lessonToGroup1 = lessonToGroupService.findOne(lessonToGroup);
+//            group.getLessonToGroup().add(lessonToGroup1);
+//        }
 
 
         return groupRepository.save(group);
@@ -46,7 +45,7 @@ public class GroupService  {
     }
 
     public Group findOne(Long id) throws WrongInputException {
-        return groupRepository.findById(id).orElseThrow(() -> new WrongInputException("Order with " + id + " not exists"));
+        return groupRepository.findById(id).orElseThrow(() -> new WrongInputException("Group with " + id + " not exists"));
     }
 
     public void delete(Long id) throws WrongInputException {

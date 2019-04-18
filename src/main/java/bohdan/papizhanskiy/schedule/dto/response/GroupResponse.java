@@ -17,12 +17,13 @@ public class GroupResponse {
 
     private Long id ;
     private String name;
-    private List<LessonToGroupResponse> lessonToGroupResponses = new ArrayList<>();
+//    private List<LessonToGroupResponse> lessonToGroupResponses = new ArrayList<>();
 
 
     public GroupResponse(Group group){
         id= group.getId();
         name = group.getName();
-        lessonToGroupResponses = group.getLessonToGroup().stream().map(LessonToGroupResponse::new).collect(Collectors.toList());
+
+//        lessonToGroupResponses = group.getLessonToGroup().stream().map(LessonToGroupResponse::new).collect(Collectors.toList());
     }
 }

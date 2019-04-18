@@ -22,7 +22,7 @@ public class TimeService {
 
     public Time findOne(Long id) throws WrongInputException {
         return timeRepository.findById(id)
-                .orElseThrow(() -> new WrongInputException("Laptop with id " + id + " not exists"));
+                .orElseThrow(() -> new WrongInputException("Time with id " + id + " not exists"));
     }
 
     public List<TimeResponse> findAll() {

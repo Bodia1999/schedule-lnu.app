@@ -2,23 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Time-Admin</title>
+    <title>Lesson-Admin</title>
     <link rel="stylesheet" href="css/lesson.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-    </head>
+</head>
 <body>
 <div>
- <!--<header>-->
-   <!--<div class="logo">-->
-    <!--<a href="main.html"><img class="logotype" src="photo/FINAL_VERSION.png" alt="logo"></a>-->
+    <header>
+        <div class="logo">
+            <a href="main.html"><img class="logotype" src="photo/FINAL_VERSION.png" alt="logo"></a>
 
-   <!--</div>-->
- <!--</header>-->
-  
+        </div>
+    </header>
+
 </div>
 <div class="createLessonButton">
-  
-<button id="openModal">Create lesson</button>
+
+    <button id="openModal">Create Lesson</button>
 </div>
 
 <!-- The Modal -->
@@ -28,27 +28,46 @@
     <div class="modal-content">
         <div class="modal-header">
             <span class="close">&times;</span>
-            <h2>Create lesson</h2>
+            <h2>Create Lesson</h2>
         </div>
         <div class="modal-body">
             <div>
                 <form style="height: 500px;">
-                    <label for="name">Lesson name</label><br>
-                    <input type="text" id="name" name="name" placeholder="Write your name of lesson.."><br>
-                    <label for="time">Time</label><br>
-                    <select id="time">
-                    </select><br><br><br>
-                    <label for="teacher">Teacher</label><br>
-                    <select id="teacher"></select><br><br><br>
-                    <label for="audience">Audience</label><br>
-                    <select id="audience"></select><br><br><br><br>
-<!--                    <input type="text" id="dayOfTheWeek" name="dayOfTheWeek" placeholder="Write day of the week.."><br>-->
+                    <div class="contentOfForm">
+                        <div style="min-width: 200px; margin-top: 16px;">
+                            <label for="name">Lesson name</label><br>
+                            <input type="text" id="name" name="name" placeholder="Write your name of lesson.."><br>
+                            <label for="time">Time</label><br>
+                            <select id="time">
+                            </select><br><br><br>
+                            <label for="teacher">Teacher</label><br>
+                            <select id="teacher"></select><br><br><br>
+                            <label for="audience">Audience</label><br>
+                            <select id="audience"></select><br><br><br><br>
+                            <input type="button" id="btnCreateLesson" value="Create">
+                            <input type="button" id="btnUpdateLesson" value="Update">
+                        </div>
+                        <div style="min-width: 200px">
+                            <p><span class="make-title span">Groups:</span></p>
+                            <div id="allGroups">
+                                <!--                                <label class="checkbox-container">Intel-->
+                                <!--                                <input type="checkbox" name="type"-->
+                                <!--                                       class="checkBox-value-processor" value="Intel">-->
+                                <!--                                <span class="checkmark"></span>-->
+                                <!--                            </label>-->
+
+
+                            </div>
+                            <input type="button" id="button-to-groups" value="Choose groups" onclick="localVariable++;">
+
+                        </div>
+                    </div>
+                    <!--                    <input type="text" id="dayOfTheWeek" name="dayOfTheWeek" placeholder="Write day of the week.."><br>-->
                     <!--<label for="volumeOfMemory">Volume of memory</label><br>-->
                     <!--<input min="0" type="number" id="volumeOfMemory" name="volumeOfMemory" placeholder="Your volume Of Memory.."><br>-->
                     <!--<label for="typeOfMemory">Type of memory</label><br>-->
                     <!--<input type="text" id="typeOfMemory" name="typeOfMemory" placeholder="Your type Of Memory.."><br>-->
-                    <input type="button" id="btnCreateLesson" value="Create">
-                    <input type="button" id="btnUpdateLesson" value="Update">
+
                 </form>
             </div>
         </div>
@@ -58,8 +77,6 @@
     </div>
 
 </div>
-    
-
 
 
 <table id="lessons">
@@ -69,6 +86,7 @@
         <th>Time</th>
         <th>Teacher</th>
         <th>Audience</th>
+        <th>Groups</th>
         <!--<th>Volume Of Memory</th>-->
         <!--<th>Type Of Memory</th>-->
         <th>Delete Button</th>
@@ -77,13 +95,42 @@
 </table>
 
 <script>
-    var mainUrl = "http://localhost:8000";
-
+    let mainUrl = "http://localhost:8000";
+    let groups = [];
+    let lessonToGroupsArray = new Array();
+    let localVariable = 0;
+    let checkingValue;
+    // window.localStorage.setItem('lessonToGroupIds','1');
     setModalConfiguration();
     getAllLesson();
     setActionOnCreateBtn();
-    $('#btnCreateTimes').show();
-    $('#btnUpdateTimes').hide();
+    $('#btnCreateLesson').show();
+    $('#btnUpdateLesson').hide();
+    // let lessonToGroupArray = [];
+    // let lessonToGroupsIDS = [];
+    // window.localStorage.setItem('lessonToGroupsId',lessonToGroupArray);
+
+
+    // });
+    function settingGroupsToArray() {
+        groups = [];
+        $(".checkBox-value-groups:checked").each(function () {
+
+            // // $('.checkbox-value-groups').change(function () {
+
+
+            groups.push($(this).val());
+            // window.localStorage.setItem('key', groups);
+
+        });
+
+        console.log(groups);
+        // separatingString();
+
+    }
+
+    // });
+
 
     //start when load page PS reload page for triggered http request
     function getAllLesson() {
@@ -98,8 +145,8 @@
             contentType: "application/json",
             success: function (dataResponse) {
                 setLessonsToTable(dataResponse);
-                // setActionOnDeleteButtons();
-                // setActionOnUpdateButton();
+                setActionOnDeleteButtons();
+                setActionOnUpdateButton();
             },
             error: function (error) {
                 alert(error.message);
@@ -119,54 +166,124 @@
             '<td>' + lesson.id + '</td>' +
             '<td>' + lesson.name + '</td>' +
 
-            '<td>' + lesson.timeResponse.startTime +' - '+lesson.timeResponse.endTime+ '</td>' +
-            '<td>' + lesson.teacherResponse.name +' '+lesson.teacherResponse.surname+ '</td>' +
-            '<td>' + lesson.audienceResponse.audienceNumber+ '</td>' +
+            '<td>' + lesson.timeResponse.dayOfWeek + ' ' + lesson.timeResponse.startTime + ' - ' + lesson.timeResponse.endTime + '</td>' +
+            '<td>' + lesson.teacherResponse.name + ' ' + lesson.teacherResponse.surname + ' ' + lesson.teacherResponse.patronymic + '</td>' +
+            '<td>' + lesson.audienceResponse.audienceNumber +' '+lesson.audienceResponse.audienceAddress+ '</td>' +
+            '<td>' + getAllGroupsId(lesson.lessonToGroupResponses) + '</td>' +
             // '<td>' + lesson.dayOfWeek + '</td>' +
             // '<td>' + time.volumeOfMemory + '</td>' +
             // '<td>' + time.typeOfMemory + '</td>' +
             '<td><button class="button" value="' + lesson.id + '">Delete</button></td>' +
-            '<td><button class="buttonToUpdate" value="' + lesson.id +'">Update</button></td>' +
+            '<td><button class="buttonToUpdate" value="' + lesson.id + '">Update</button></td>' +
             '</tr>');
+    }
+
+    function getAllGroupsId(group) {
+        let idArray = new Array();
+        for (let one of group) {
+            idArray.push(one.groupResponse.name + "(ID-" + one.groupResponse.id + ")");
+            // idArray.push()
+            // idArray.push();
+            // idArray.push(")")
+
+        }
+        return idArray;
     }
 
 
     function setActionOnCreateBtn() {
         $("#btnCreateLesson").click(function () {
+            // setToLessonToProduct();
+            creatingLessons();
+            // console.log(lessonToGroupsArray);
 
-            var startTime = $("#startTime").val();
-            var endTime = $("#endTime").val();
-            var dayOfTheWeek = $("#dayOfTheWeek").val();
-            // var volumeOfMemory = $("#volumeOfMemory").val();
-            // var typeOfMemory = $("#typeOfMemory").val();
-//            if (firstName != null && lastName != null && age != null) {
-
-            var newTime = {
-                "startTime": startTime,
-                "endTime":endTime,
-                "dayOfWeek":dayOfTheWeek
-                // "volumeOfMemory":volumeOfMemory,
-                // "typeOfMemory":typeOfMemory
-            };
-
-            $.ajax({
-                url: mainUrl + "/time",
-                type: "POST",
-                // headers:{
-                //     'Authorize':window.localStorage.getItem('token')
-                // },
-                contentType: "application/json",
-                data: JSON.stringify(newTime),
-                success: function (data) {
-                    location.reload();
-                },
-                error: function (error) {
-                    alert(error.message);
-                }
-            });
 //            } else {
 //                alert("Всі поля повинні бути заповнені")
 //            }
+        });
+    }
+
+
+    $('#button-to-groups').click(function () {
+        lessonToGroupsArray = [];
+        setToLessonToGroup();
+
+    });
+
+    function setToLessonToGroup() {
+
+        for (let i = 0; i < groups.length; i++) {
+            var value = parseInt(groups[i]);
+
+
+            savingGroupToLessonToGroup(value);
+
+
+        }
+
+        if (checkingValue){
+            alert("Groups were added!");
+        }
+
+
+
+    };
+
+    function savingGroupToLessonToGroup(groupId) {
+
+
+        let lessonToGroup = {
+            "groupId": groupId
+        };
+        $.ajax({
+            url: 'http://localhost:8000/lessonToGroup',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(lessonToGroup),
+            success: (dataResponse) => {
+                lessonToGroupsArray.push(parseInt(dataResponse.id));
+                checkingValue = true;
+
+
+            },
+            error: (e) => {
+                console.log("LessonToGroup");
+            }
+        });
+    }
+
+
+    function creatingLessons() {
+        let name = $("#name").val();
+        let time = $("#time option:selected").val();
+        let teacher = $("#teacher option:selected").val();
+        let audience = $("#audience option:selected").val();
+
+        let newLesson = {
+            "name": name,
+            "timeId": time,
+            "teacherId": teacher,
+            "audienceId": audience,
+            "lessonToGroupId": lessonToGroupsArray
+
+        };
+
+        $.ajax({
+            url: mainUrl + "/lesson",
+            type: "POST",
+            // headers:{
+            //     'Authorize':window.localStorage.getItem('token')
+            // },
+            contentType: "application/json",
+            data: JSON.stringify(newLesson),
+            success: function (data) {
+                window.localStorage.removeItem('lessonToGroupIds');
+
+                location.reload();
+            },
+            error: function (error) {
+                alert("Lesson");
+            }
         });
     }
 
@@ -175,7 +292,7 @@
         $(".button").each(function (index) {
             $(this).click(function () {
                 $.ajax({
-                    url: mainUrl + "/time?id=" + $(this).val(),
+                    url: mainUrl + "/lesson?id=" + $(this).val(),
                     type: "DELETE",
                     // headers:{
                     //     'Authorize':window.localStorage.getItem('token')
@@ -193,55 +310,123 @@
 
     }
 
+    function deleteLessonToGroup(responseForDelete) {
+        for (let i = 0; i < responseForDelete.length; i++) {
+            $.ajax({
+                url: mainUrl + "/lessonToGroup?id=" + responseForDelete.id,
+                type: "DELETE",
+                success: function (data) {
+                    // location.reload();
+                },
+                error: function (error) {
+                    alert(error.message);
+                }
+
+            });
+        }
+
+    }
+
+    function deleteLesson(id) {
+        $.ajax({
+            url: mainUrl + "/lesson?id=" + id,
+            type: "DELETE",
+            success: function (data) {
+                // location.reload();
+            },
+            error: function (error) {
+                alert(error.message);
+            }
+
+        });
+    }
+
     function setActionOnUpdateButton() {
 
         $(".buttonToUpdate").each(function (index) {
             var identifier;
             identifier = $(this).val();
+            let responseForDelete;
+
             $(this).click(function () {
                 $.ajax({
-                    url: mainUrl + "/time/findOne?id=" + $(this).val(),
+                    url: mainUrl + "/lesson/findOne?id=" + $(this).val(),
                     type: "POST",
                     // headers:{
                     //     'Authorize':window.localStorage.getItem('token')
                     // },
                     contentType: "application/json",
                     success: function (dataResponse) {
+                        responseForDelete = dataResponse.lessonToGroupResponses;
+                        window.localStorage.setItem('idForSelectedTime', dataResponse.timeResponse.id);
+                        window.localStorage.setItem('idForSelectedTeacher', dataResponse.teacherResponse.id);
+                        window.localStorage.setItem('idForSelectedAudience', dataResponse.audienceResponse.id);
+                        let lessonToGroupResponses = dataResponse.lessonToGroupResponses;
+                        let array = [];
+                        for (let i = 0; i < lessonToGroupResponses.length; i++) {
+
+                            array.push(lessonToGroupResponses[i].groupResponse.id);
+                            // groups =  [];
+                            groups.push(lessonToGroupResponses[i].groupResponse.id);
+
+                        }
+                        console.log(groups);
+
+                        window.localStorage.setItem('idForGroups', array);
+                        deleteLesson(identifier);
+                        deleteLessonToGroup(responseForDelete);
                         // var parse = JSON.parse(dataResponse);
                         //
-                        $("#startTime").val(dataResponse.startTime);
-                        $("#endTime").val(dataResponse.endTime);
-                        $("#dayOfTheWeek").val(dataResponse.dayOfWeek);
-                        $('#btnCreateTimes').hide();
-                        $('#btnUpdateTimes').show();
+                        $("#name").val(dataResponse.name);
+                        getTime();
+                        getTeacher();
+                        getAudience();
+                        getGroups();
+                        // $("#time").val(dataResponse.timeResponse);
+                        // $("#teacher").val(dataResponse.teacherResponse);
+                        // $("#audience").val(dataResponse.audienceResponse);
+                        $('#btnCreateLesson').hide();
+                        $('#btnUpdateLesson').show();
 
                         var elementById = document.getElementById("myModal");
-                        elementById.style.display="block";
-                        $("#btnUpdateTimes").click(function () {
+                        elementById.style.display = "block";
 
-                            var startTime = $("#startTime").val();
-                            var endTime = $("#endTime").val();
-                            var dayOfTheWeek = $("#dayOfTheWeek").val();
+                        $("#btnUpdateLesson").click(function () {
+                            // deleteLesson($(this).val());
+                            // for (let i = 0; i < lessonToGroupResponses.length; i++) {
+                            //     deleteLessonToGroup(lessonToGroupResponses[i].id);
+                            // }
+
+                            window.localStorage.removeItem("idForSelectedAudience");
+                            window.localStorage.removeItem("idForSelectedTeacher");
+                            window.localStorage.removeItem("idForSelectedTime");
+                            window.localStorage.removeItem("idForGroups");
+                            var name = $("#name").val();
+                            var time = $("#time option:selected").val();
+                            var teacher = $("#teacher option:selected").val();
+                            var audience = $("#audience option:selected").val();
                             // var volumeOfMemory = $("#volumeOfMemory").val();
                             // var typeOfMemory = $("#typeOfMemory").val();
 //            if (firstName != null && lastName != null && age != null) {
 
-                            var newTime = {
-                                "startTime": startTime,
-                                "endTime":endTime,
-                                "dayOfWeek":dayOfTheWeek
+                            var newLesson = {
+                                "name": name,
+                                "timeId": time,
+                                "teacherId": teacher,
+                                "audienceId": audience,
+                                "lessonToGroupId": groups
                                 // "volumeOfMemory":volumeOfMemory,
                                 // "typeOfMemory":typeOfMemory
                             };
 
                             $.ajax({
-                                url: mainUrl + "/time?id="+ identifier,
-                                type: "PUT",
+                                url: mainUrl + "/lesson",
+                                type: "POST",
                                 // headers:{
                                 //     'Authorize':window.localStorage.getItem('token')
                                 // },
                                 contentType: "application/json",
-                                data: JSON.stringify(newTime),
+                                data: JSON.stringify(newLesson),
                                 success: function (data) {
                                     location.reload();
                                 },
@@ -254,7 +439,7 @@
 //            }
                         });
                     },
-                    error:function (e) {
+                    error: function (e) {
                         console.log(e)
                     }
                 });
@@ -264,84 +449,158 @@
     }
 
 
-function getTime(){
-
-    $.ajax({
-        url: mainUrl + "/time",
-        type: "GET",
-        // headers:{
-        //     'Authorize':window.localStorage.getItem('token')
-        // },
-
-
-        contentType: "application/json",
-        success: function (dataResponse) {
-            $('#time').html('');
-            for (let time of dataResponse){
-            appendTime(time)}
-            // setActionOnDeleteButtons();
-            // setActionOnUpdateButton();
-        },
-});}
-
-function appendTime(values){
-    var time = $("#time");
-    time.append(`<option value="${values.id}">${values.dayOfWeek} ${values.startTime}-${values.endTime}</option>`);
-}
-
-function appendTeacher(values){
-    var teacher = $("#teacher");
-    teacher.append(`<option value="${values.id}">${values.name} ${values.surname} ${values.patronymic}</option>`);
-}
-
-function appendAudience(values){
-    var audience = $("#audience");
-    audience.append(`<option value="${values.id}">${values.audienceNumber} ${values.audienceAddress}</option>`);
-}
-
-function getTeacher(){
-    $.ajax({
-        url: mainUrl + "/teacher",
-        type: "GET",
-        // headers:{
-        //     'Authorize':window.localStorage.getItem('token')
-        // },
+    function getGroups() {
+        $.ajax({
+            url: mainUrl + "/group",
+            type: "GET",
+            // headers:{
+            //     'Authorize':window.localStorage.getItem('token')
+            // },
 
 
-        contentType: "application/json",
-        success: function (dataResponse) {
-            $('#teacher').html('');
-            for (let teacher of dataResponse){
-                appendTeacher(teacher)}
-            // setActionOnDeleteButtons();
-            // setActionOnUpdateButton();
-        },
-    });
-}
+            contentType: "application/json",
+            success: function (dataResponse) {
+                $('#allGroups').html('');
+                for (let group of dataResponse) {
+                    appendGroups(group)
+                }
+                // setActionOnDeleteButtons();
+                // setActionOnUpdateButton();
+            },
+        });
+    }
 
-function getAudience(){
-    $.ajax({
-        url: mainUrl + "/audience",
-        type: "GET",
-        // headers:{
-        //     'Authorize':window.localStorage.getItem('token')
-        // },
+    function getTime() {
 
-
-        contentType: "application/json",
-        success: function (dataResponse) {
-            $('#audience').html('');
-            for (let audience of dataResponse){
-                appendAudience(audience)}
-            // setActionOnDeleteButtons();
-            // setActionOnUpdateButton();
-        },
-    });
-}
+        $.ajax({
+            url: mainUrl + "/time",
+            type: "GET",
+            // headers:{
+            //     'Authorize':window.localStorage.getItem('token')
+            // },
 
 
+            contentType: "application/json",
+            success: function (dataResponse) {
+                $('#time').html('');
+                for (let time of dataResponse) {
+                    appendTime(time);
+
+                }
+                // setActionOnDeleteButtons();
+                // setActionOnUpdateButton();
+            },
+        });
+    }
+
+    function gettingGroupsFromLocalStorage() {
+        let item = window.localStorage.getItem('idForGroups');
+        if (item != null) {
+            let strings = item.split(',');
+            let arrray = [];
+            for (let i = 0; i < strings.length; i++) {
+                arrray.push(strings[i]);
+            }
+            console.log(arrray);
+            return arrray;
+        }
+    }
+
+    function appendGroups(value) {
+        var allGroups = $('#allGroups');
+        if (gettingGroupsFromLocalStorage() != null) {
+            for (let i = 0; i < gettingGroupsFromLocalStorage().length; i++) {
+                if (gettingGroupsFromLocalStorage()[i] == value.id) {
+                    allGroups.append(`<label style="margin-top: 8px; font-size: 15px;" class="checkbox-container">${value.name}
+                                <input checked type="checkbox" name="type" onclick="settingGroupsToArray();"
+                                       class="checkBox-value-groups" value="${value.id}">
+                                <span class="checkmark"></span>
+                            </label>`);
+                    return;
+                }
+
+            }
+        }
+        allGroups.append(`<label style="margin-top: 8px; font-size: 15px;" class="checkbox-container">${value.name}
+                                <input  type="checkbox" name="type" onclick="settingGroupsToArray();"
+                                       class="checkBox-value-groups" value="${value.id}">
+                                <span class="checkmark"></span>
+                            </label>`);
+
+    }
+
+    function appendTime(values) {
+        var time = $("#time");
+        var selector = window.localStorage.getItem('idForSelectedTime');
+        if (parseInt(selector) == parseInt(values.id)) {
+            time.append(`<option selected value="${values.id}">${values.dayOfWeek} ${values.startTime}-${values.endTime}</option>`);
+        } else {
+            time.append(`<option value="${values.id}">${values.dayOfWeek} ${values.startTime}-${values.endTime}</option>`);
+        }
+    }
+
+    function appendTeacher(values) {
+        var teacher = $("#teacher");
+        var selector = window.localStorage.getItem('idForSelectedTeacher');
+        if (parseInt(selector) == parseInt(values.id)) {
+            teacher.append(`<option selected value="${values.id}">${values.name} ${values.surname} ${values.patronymic}</option>`);
+        } else {
+
+            teacher.append(`<option  value="${values.id}">${values.name} ${values.surname} ${values.patronymic}</option>`);
+        }
+    }
+
+    function appendAudience(values) {
+        var audience = $("#audience");
+        var selector = window.localStorage.getItem('idForSelectedAudience');
+        if (parseInt(selector) == parseInt(values.id)) {
+            audience.append(`<option selected value="${values.id}">${values.audienceNumber} ${values.audienceAddress}</option>`);
+        } else {
+            audience.append(`<option value="${values.id}">${values.audienceNumber} ${values.audienceAddress}</option>`)
+        }
+    }
+
+    function getTeacher() {
+        $.ajax({
+            url: mainUrl + "/teacher",
+            type: "GET",
+            // headers:{
+            //     'Authorize':window.localStorage.getItem('token')
+            // },
 
 
+            contentType: "application/json",
+            success: function (dataResponse) {
+                $('#teacher').html('');
+                for (let teacher of dataResponse) {
+                    appendTeacher(teacher)
+                }
+                // setActionOnDeleteButtons();
+                // setActionOnUpdateButton();
+            },
+        });
+    }
+
+    function getAudience() {
+        $.ajax({
+            url: mainUrl + "/audience",
+            type: "GET",
+            // headers:{
+            //     'Authorize':window.localStorage.getItem('token')
+            // },
+
+
+            contentType: "application/json",
+            success: function (dataResponse) {
+                $('#audience').html('');
+                for (let audience of dataResponse) {
+                    appendAudience(audience)
+                }
+                // setActionOnDeleteButtons();
+                // setActionOnUpdateButton();
+            },
+        });
+    }
 
 
     function setModalConfiguration() {
@@ -349,10 +608,8 @@ function getAudience(){
         var modal = document.getElementById('myModal');
 
 
-
         // Get the button that opens the modal
         var btn = document.getElementById("openModal");
-
 
 
         // Get the <span> element that closes the modal
@@ -361,23 +618,38 @@ function getAudience(){
         // When the user clicks the button, open the modal
 
 
-
-        btn.onclick = function(){
+        btn.onclick = function clicker() {
             getTime();
             getTeacher();
             getAudience();
+            getGroups();
+
             modal.style.display = "block";
         };
 
 
         span.onclick = function () {
+            if (localVariable != 0) {
+                creatingLessons();
+            }
             modal.style.display = "none";
+            window.localStorage.removeItem("idForSelectedAudience");
+            window.localStorage.removeItem("idForSelectedTeacher");
+            window.localStorage.removeItem("idForSelectedTime");
+            window.localStorage.removeItem("idForGroups");
         };
 
         // When the user clicks anywhere outside of the modal, close it
         window.onclick = function (event) {
             if (event.target == modal) {
+                if (localVariable != 0) {
+                    creatingLessons();
+                }
                 modal.style.display = "none";
+                window.localStorage.removeItem("idForSelectedAudience");
+                window.localStorage.removeItem("idForSelectedTeacher");
+                window.localStorage.removeItem("idForSelectedTime");
+                window.localStorage.removeItem("idForGroups");
 
             }
         };

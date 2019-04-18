@@ -21,9 +21,12 @@ public class LessonToGroupService {
     @Autowired
     private LessonService lessonService;
 
+    @Autowired
+    private GroupService groupService;
+
     public LessonToGroup findOne(Long id) throws WrongInputException {
         return lessonToGroupRepository.findById(id)
-                .orElseThrow(() -> new WrongInputException("Product for order with id " + id + " not exists"));
+                .orElseThrow(() -> new WrongInputException("LessonToGroup for order with id " + id + " not exists"));
     }
 
     public LessonToGroupResponse save(LessonToGroupRequest lessonToGroupRequest) throws WrongInputException {
@@ -38,8 +41,9 @@ public class LessonToGroupService {
         if (lessonToGroup == null) {
             lessonToGroup = new LessonToGroup();
         }
+        lessonToGroup.setGroup(groupService.findOne(lessonToGroupRequest.getGroupId()));
 
-        lessonToGroup.setLesson(lessonService.findOne(lessonToGroupRequest.getLessonId()));
+//        lessonToGroup.setLesson(lessonService.findOne(lessonToGroupRequest.getLessonId()));
 
 
 //        productForOrder = productForOrderRepository.save(productForOrder);
@@ -59,4 +63,12 @@ public class LessonToGroupService {
     public void delete(Long id )throws WrongInputException{
         lessonToGroupRepository.delete(findOne(id));
     }
+
+    public List<LessonToGroupResponse> findAllByGroupId(Long id){
+        return lessonToGroupRepository.findAllByGroup_Id(id).stream().map(LessonToGroupResponse::new).collect(Collectors.toList());
+    }
+
+//    public List<LessonToGroupResponse> findAllByLessonId(Long id){
+//        return lessonToGroupRepository.findAllByLessonId(id).stream().map(LessonToGroupResponse::new).collect(Collectors.toList());
+//    }
 }

@@ -17,11 +17,12 @@ public class LessonToGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    private Lesson lesson;
+    @ManyToMany(mappedBy = "lessonToGroups")
+    private List<Lesson> lesson = new ArrayList<>();
 
-    @ManyToMany
-    private List<Group> groups = new ArrayList<>();
+    @ManyToOne
+    private Group group;
+
 }
 
 

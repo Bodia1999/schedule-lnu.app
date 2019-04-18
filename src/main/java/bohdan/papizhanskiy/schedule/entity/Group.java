@@ -25,6 +25,6 @@ public class Group {
 
     private String name;
 
-    @ManyToMany(mappedBy = "groups")
+    @OneToMany(mappedBy = "group")
     private List<LessonToGroup> lessonToGroup = new ArrayList<>();
 }

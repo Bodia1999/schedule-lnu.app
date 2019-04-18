@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -12,10 +15,11 @@ public class LessonToGroupResponse {
 
     private Long id;
 
-    private LessonResponse lessonResponse;
+    private GroupResponse groupResponse;
 
     public LessonToGroupResponse(LessonToGroup lessonToGroup) {
         id = lessonToGroup.getId();
-        lessonResponse = new LessonResponse(lessonToGroup.getLesson());
+        groupResponse = new GroupResponse(lessonToGroup.getGroup());
+//        groupResponse = lessonToGroup.getGroups().stream().map(GroupResponse::new).collect(Collectors.toList());
     }
 }
