@@ -95,7 +95,7 @@
 </table>
 
 <script>
-    let mainUrl = "http://localhost:8000";
+    let mainUrl = "https://yourschedulelnu.herokuapp.com";
     let groups = [];
     let lessonToGroupsArray = new Array();
     let localVariable = 0;
@@ -236,7 +236,7 @@
             "groupId": groupId
         };
         $.ajax({
-            url: 'http://localhost:8000/lessonToGroup',
+            url: mainUrl+'/lessonToGroup',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(lessonToGroup),
