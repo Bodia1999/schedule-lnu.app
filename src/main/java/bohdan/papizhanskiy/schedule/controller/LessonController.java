@@ -48,7 +48,7 @@ public class LessonController {
     }
 
     @PostMapping("/findByFilter")
-    public DataResponse<LessonResponse> findByFilter(@RequestBody LessonFilterRequest lessonFilterRequest){
+    public List<LessonResponse> findByFilter(@RequestBody LessonFilterRequest lessonFilterRequest){
         return lessonService.findByFilter(lessonFilterRequest);
     }
 

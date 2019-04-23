@@ -75,12 +75,14 @@ public class LessonService {
                 .orElseThrow(() -> new WrongInputException("Lesson with id " + id + " not exists"));
     }
 
-    public DataResponse<LessonResponse> findByFilter(LessonFilterRequest lessonFilterRequest) {
-        Page<Lesson> page = lessonRepository.findAll(new LessonSpecification(lessonFilterRequest),
-                lessonFilterRequest.getPagination().mapToPageRequest());
+    public List<LessonResponse> findByFilter(LessonFilterRequest lessonFilterRequest) {
+//        Page<Lesson> page = lessonRepository.findAll(new LessonSpecification(lessonFilterRequest),
+//                lessonFilterRequest.getPagination().mapToPageRequest());
 
-        return new DataResponse<>(page.get().map(LessonResponse::new).collect(Collectors.toList()), page.getTotalPages(), page.getTotalElements());
+//        return new DataResponse<>(page.get().map(LessonResponse::new).collect(Collectors.toList()), page.getTotalPages(), page.getTotalElements());
 
+        List<Lesson> all = lessonRepository.findAll(new LessonSpecification(lessonFilterRequest));
+        return all.stream().map(LessonResponse::new).collect(Collectors.toList());
     }
 
     public DataResponse<LessonResponse> findAll(PaginationRequest paginationRequest) {

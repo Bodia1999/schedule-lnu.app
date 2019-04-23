@@ -17,6 +17,6 @@ public class LessonFilterRequest {
 
     private String teacherSurname;
 
-    private PaginationRequest pagination;
+//    private PaginationRequest pagination;
 
 }
