@@ -96,6 +96,7 @@
 
 <script>
     let mainUrl = "https://yourschedulelnu.herokuapp.com";
+    // let mainUrl = "http://localhost:8000";
     let groups = [];
     let lessonToGroupsArray = new Array();
     let localVariable = 0;
@@ -319,7 +320,7 @@
                     // location.reload();
                 },
                 error: function (error) {
-                    alert(error.message);
+                    // alert(error.message);
                 }
 
             });
@@ -335,7 +336,7 @@
                 // location.reload();
             },
             error: function (error) {
-                alert(error.message);
+                // alert(error.message);
             }
 
         });
@@ -370,11 +371,12 @@
                             groups.push(lessonToGroupResponses[i].groupResponse.id);
 
                         }
+                        deleteLesson(identifier);
+                        deleteLessonToGroup(responseForDelete);
                         console.log(groups);
 
                         window.localStorage.setItem('idForGroups', array);
-                        deleteLesson(identifier);
-                        deleteLessonToGroup(responseForDelete);
+
                         // var parse = JSON.parse(dataResponse);
                         //
                         $("#name").val(dataResponse.name);
@@ -392,6 +394,7 @@
                         elementById.style.display = "block";
 
                         $("#btnUpdateLesson").click(function () {
+
                             // deleteLesson($(this).val());
                             // for (let i = 0; i < lessonToGroupResponses.length; i++) {
                             //     deleteLessonToGroup(lessonToGroupResponses[i].id);
