@@ -44,7 +44,7 @@ public class LessonSpecification implements Specification<Lesson> {
 
         Join<Lesson, Audience> audienceRoot = root.join("audience");
 
-        return criteriaBuilder.like(audienceRoot.get("audienceNumber"), '%'+lessonFilterRequest.getAudienceNumber()+'%');
+        return criteriaBuilder.like(audienceRoot.get("audienceNumber"), lessonFilterRequest.getAudienceNumber()+'%');
 
     }
 
