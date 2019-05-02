@@ -55,7 +55,7 @@ public class LessonSpecification implements Specification<Lesson> {
         }
 
         Join<Lesson, Time> timeRoot = root.join("time");
-        return criteriaBuilder.like(timeRoot.get("dayOfWeek"), lessonFilterRequest.getDayOfTheWeek());
+        return criteriaBuilder.like(timeRoot.get("dayOfWeek"), lessonFilterRequest.getDayOfTheWeek()+'%');
     }
 
     private Predicate filterByLessonName(Root<Lesson> root, CriteriaBuilder criteriaBuilder) {
